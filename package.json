@@ -1,0 +1,17 @@
+{
+  "name": "alinabeeha_imd3901_a2",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aframe-randomizer-components": "^3.0.2",
+    "express": "^4.17.2",
+    "super-hands": "^3.0.2"
+  },
+  "devDependencies": {},
+  "description": ""
+}
