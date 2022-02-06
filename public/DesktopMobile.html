@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+
+    <title>Summer Nights - Desktop/Mobile Version</title>
+    <meta name="description" content="Hello, WebVR! - A-Frame">
+      
+    <!--Using A-Frame 1.1.0 as most recent + adding extra components-->
+    <script src="/js/aframe.min.js"></script>
+    <script src="js/aframe-environment-component.min.js"></script>
+    <script src="js/aframe-randomizer-components.min.js"></script>    
+    <script src="js/fire-effect.js"></script>
+    <script src="js/fire.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-physics-system/v4.0.1/dist/aframe-physics-system.min.js"></script>
+    <script src="https://unpkg.com/aframe-physics-extras@0.1.2/dist/aframe-physics-extras.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@4.2.1/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/super-hands@^3.0.1/dist/super-hands.min.js"></script> 
+
+    <!--Playing fire SFX when button is clicked-->
+    <script>
+      AFRAME.registerComponent('activate-audio', 
+      {
+        init: function () 
+        {
+          var fire = document.querySelector("#universal-button");
+          var confirm = false;
+          this.el.addEventListener('click', function() {
+          if(confirm == false) 
+          {
+            fire.components.sound.playSound();
+            confirm = true;
+          }
+          else 
+          {
+            fire.components.sound.pauseSound();
+            confirm = false;
+          }
+          });
+        }
+      });
+    </script>
+
+  </head>
+
+  <body>       
+        
+    <a-scene>
+               
+      <!--Cache/local save assets-->
+      <a-assets>
+
+        <!--Audio Assets (Credit: https://mixkit.co/free-sound-effects/forest/ and https://www.soundjay.com/fire-sound-effects.html)-->
+        <audio id="camping_music" src="assets/camping-ambience.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <audio id="fire_sfx" src="assets/campfire-sfx.mp3" preload="auto" crossorigin="anonymous"></audio>
+                  
+        <!--3D Model Assets purchased from https://sketchfab.com/3d-models/cartoon-camping-kit-6baeb91fa58549e29f839a7e72fc1af1-->
+        <a-asset-item id="stones_model" response-type="arraybuffer" src="assets/Campfire/scene.gltf"></a-asset-item>
+        <a-asset-item id="tent_model" response-type="arraybuffer" src="assets/Tent/scene.gltf"></a-asset-item>
+        <a-asset-item id="table_model" response-type="arraybuffer" src="assets/Table/scene.gltf"></a-asset-item>
+        <a-asset-item id="chair1_model" response-type="arraybuffer" src="assets/Chair_1/scene.gltf"></a-asset-item>
+        <a-asset-item id="chair2_model" response-type="arraybuffer" src="assets/Chair_2/scene.gltf"></a-asset-item>
+        <a-asset-item id="carpet_model" response-type="arraybuffer" src="assets/Carpet/scene.gltf"></a-asset-item>
+        <a-asset-item id="bag_model" response-type="arraybuffer" src="assets/Bag/scene.gltf"></a-asset-item>
+        <a-asset-item id="sleeping_bag_model" response-type="arraybuffer" src="assets/Sleeping_Bag/scene.gltf"></a-asset-item>
+        <a-asset-item id="camera_model" response-type="arraybuffer" src="assets/Camera/scene.gltf"></a-asset-item>
+        <a-asset-item id="mug_model" response-type="arraybuffer" src="assets/Mug/scene.gltf"></a-asset-item>
+        <a-asset-item id="sign_model" response-type="arraybuffer" src="assets/Sign/scene.gltf"></a-asset-item>
+                  
+        <!--Mixin component for logs so they all the same characteristics (Partial credit: https://wmurphyrd.github.io/aframe-super-hands-component/examples/physics/index-mouse.html)-->
+        <a-mixin  id="log" geometry="primitive: cylinder; height: 0.7; radius: 0.05;" material="color: #462100"
+                  hoverable grabbable stretchable draggable droppable
+                  event-set__hoveron="_event: hover-start; material.opacity: 0.7; transparent: true"
+                  event-set__hoveroff="_event: hover-end; material.opacity: 1; transparent: false"
+                  body="shape: cylinder" shadow random-position="min: -10 10 -10; max: 10 10 10" random rotation>
+        </a-mixin>
+                 
+      </a-assets>
+
+      <!--Sound setup-->
+      <a-entity sound="src: #camping_music; autoplay:true; loop:true;"></a-entity>
+      <a-entity sound="src: #fire_sfx"></a-entity>
+
+      <!--Camera and lighting setup-->
+      <!--Movement controls to make it mobile friendly-->
+      <a-entity movement-controls>
+      <a-entity id="starting-position" position="0 1.5 4.5">
+        <a-entity camera look-controls  
+                  capture-mouse
+                  raycaster cursor="rayOrigin:mouse"
+                  body="type: static; shape: sphere; sphereRadius: 0.001"
+                  super-hands=  "colliderEvent: raycaster-intersection;
+                                colliderEventProperty: els;
+                                colliderEndEvent:raycaster-intersection-cleared;
+                                colliderEndEventProperty: clearedEls;">
+          <a-entity light="type:spot; intensity:1.4; castShadow:true; shadowBias:-0.0005; angle:40; penumbra:0.3;" position="0.5 -0.5 0"></a-entity>
+          <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
+        </a-entity>
+      </a-entity>
+      </a-entity>
+      
+      <!--Campfire setup-->
+      <a-entity>
+        <a-entity id="chair" position="2 0 -2" rotation="0, 135, 0" scale="0.5 0.5 0.5" gltf-model="#chair2_model" shadow="cast:true; receive:false;"></a-entity>
+        <a-entity id="chair" position="-2 0 -2" rotation="0, 225, 0" scale="0.5 0.5 0.5" gltf-model="#chair2_model" shadow="cast:true; receive:false;"></a-entity> 
+        <a-entity id="chair" position="0 0 -2.5" rotation="0, 180, 0" scale="0.5 0.5 0.5" gltf-model="#chair1_model" shadow="cast:true; receive:false;"></a-entity>
+        <a-entity class="dirtground" geometry="primitive:cylinder; radius:2; height:0.01;" material="color:#271e11; roughness:1.0; opacity:0.85;" position="0 0 0.05"></a-entity>
+        <a-entity id="stones" position="0 0.3 0" scale="0.7 0.7 0.7" gltf-model="#stones_model" material="roughness:0; metalness:1.0;" shadow="cast:true; receive:false;"></a-entity>
+        <a-entity id="campfire"  position="0.0 -0.2 0.0" scale="2 1.2 2"></a-entity>
+        <a-entity position="0.0 1.5 0.0">
+          <a-entity id="ambient-light" light="type: point; color: #FFA200; intensity: 0; distance: 10.0; castShadow: true; shadowMapHeight: 1024; shadowMapWidth: 1024;"></a-entity>
+        </a-entity>
+
+        <!--Button setup-->
+        <a-entity id="universal-button" position="0 -0.5 1.7" sound="src: #fire_sfx">
+          <a-entity   class="button interactive" fire-effect position="0 0.6 0" geometry="primitive:cylinder; radius:0.10; height:0.05" 
+                      material="color:rgb(255,100,100)"
+                      animation__mouseenter="property:material.color; type:color; to:rgb(255,0,0); startEvents:mouseenter; dur:200;"
+                      animation__mouseleave="property:material.color; type:color; to:rgb(255,100,100); startEvents:mouseleave; dur:200;"
+                      animation__click="property:position.y; from:0.59; to:0.6; startEvents:click; dur:300;"
+                      event-set__enter="_event: mouseenter; _target: #cylinderText2; visible: true"
+                      event-set__leave="_event: mouseleave; _target: #cylinderText2; visible: false"
+                      activate-audio>
+            <a-text id="cylinderText2" value="Click to turn the fire on and off" align="center" color="#FFF" visible="false" position="0 0.8 0.55" scale="0.5 0.5 0.5"
+                    geometry="primitive: plane; width: 3.2" material="color: #333; opacity:0.6">
+            </a-text>
+          </a-entity>
+        </a-entity>
+      </a-entity>
+          
+      <!--Tent setup-->
+      <a-entity rotation="0 -90 0">
+      <a-entity id="tent" position="10 2 0" rotation="0, 90, 0" scale="0.7 0.7 0.7" gltf-model="#tent_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="sleeping_bag" position="10.5 0 0" rotation="0, 90, 0" scale="0.4 0.4 0.4" gltf-model="#sleeping_bag_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="carpet" position="7 0.01 0" scale="1 0.6 0.6" gltf-model="#carpet_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="bag" position="7.3 0 1.2" rotation="0, 270, 0" scale="0.35 0.35 0.35" gltf-model="#bag_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="table" position="6.5 0.5 -2.5" rotation="0, 90, 0" scale="0.6 0.6 0.6" gltf-model="#table_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="camera" position="6 0.95 -2.8" rotation="0, 200, 0" scale="0.3 0.3 0.3" gltf-model="#camera_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="mug" position="7 0.95 -2.8" scale="0.3 0.3 0.3" gltf-model="#mug_model" shadow="cast:true; receive:false;"></a-entity>
+        
+      <!--Sign setup--> 
+      <a-entity id="sign" position="0 0 3.5" rotation="0, -45, 0" gltf-model="#sign_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="sign_message" layout="type: box; margin: 10" geometry="primitive:plane; width:3; height:2" position="0.05 1.1 3.45" rotation="0 135 0" scale="0.3 0.3 0.3" material="color:#DA8767;"></a-entity>
+      <a-entity layout="type: box; margin: 1" scale="0.15 0.15" position="0.05 1.1 3.45" rotation="0 135 0">
+        <a-text id="message_1" value="Welcome to Camp" wrap-count="20" align="center" color="#000" position="0 1 0"></a-text>
+        <a-text id="message_2" value="Your job tonight is to place 3 logs in the pit, then click the button to start the fire." position="0 -0.1 0" wrap-count="25" align="center" color="#000"></a-text>
+        <a-text id="message_3" value="Have fun!" wrap-count="25" align="center" color="#000" position="0 -1.1 0"></a-text>
+      </a-entity>
+      </a-entity>
+
+      <!--Box to secure logs so that they don't fall through the ground-->      
+      <a-box body="type: static; shape: box" width=100 height=0.2 depth=100 visible="false"></a-box>
+
+      <!--Logs with randomized placements and rotations-->
+      <a-entity id="woodlog1" mixin="log"></a-entity>
+      <a-entity id="woodlog2" mixin="log"></a-entity>
+      <a-entity id="woodlog3" mixin="log"></a-entity>
+    
+      <!--Starting animation (would have been nice when I used to have the player start from inside the tent, but then too much space was taken up when using the headset)-->
+      <!--<a-entity position="9 1.5 0.04" rotation="0 90 0">
+        <a-plane  color="#333" width="0.5" height="0.1" 
+                  animation="property: material.opacity; from:0.6; to:0; dur:8000; easing:linear;">
+        </a-plane>
+        <a-text value="Come outside!" align="center" wrap-count="40" color="#FFF" scale="0.25 0.25 0.25"
+                animation="property: opacity; from:1; to:0; dur:8000; easing:linear;"></a-text>
+        </a-text>
+      </a-entity>-->
+
+      <!--Environment setup-->     
+      <a-entity id="env" environment= "preset:starry; 
+                                      groundTexture:squares; 
+                                      groundColor:#255428; 
+                                      groundColor2:#337033; 
+                                      gridColor:#; 
+                                      dressing:trees; 
+                                      dressingColor:#011704; 
+                                      dressingScale:2;">
+      </a-entity>
+            
+      <!--Button to enter full screen mode-->
+      <div class="a-enter-vr" aframe-injected=""><button class="a-enter-vr-button" title="Enter VR mode with a headset or fullscreen mode on a desktop. Visit https://webvr.rocks or https://webvr.info for more information."></button></div>
+    
+    </a-scene>
+
+  </body>
+
+</html>

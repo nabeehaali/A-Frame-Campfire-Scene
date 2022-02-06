@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Summer Nights - Oculus Version</title>        
+         
+    <!--Using A-Frame 1.1.0 as most recent + adding extra components-->
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://unpkg.com/super-hands/dist/super-hands.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v4.0.1/dist/aframe-physics-system.js"></script>
+    <script src="https://unpkg.com/aframe-event-set-component@^4.1.1/dist/aframe-event-set-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-physics-extras/dist/aframe-physics-extras.min.js"></script>
+    <script src="https://rawgit.com/feiss/aframe-environment-component/master/dist/aframe-environment-component.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script src="js/fire.js"></script>     
+    <script src="js/fire-effect.js"></script>
+
+    <!--Adding physics on any object grabbed by hands (CREDIT: https://github.com/wmurphyrd/aframe-super-hands-component/blob/master/examples/physics/index.html)-->
+    <script>
+      // turn controller's physics presence on only while button held down
+      AFRAME.registerComponent('phase-shift', {
+        init: function () {
+          var el = this.el
+          el.addEventListener('gripdown', function () {
+            el.setAttribute('collision-filter', {collisionForces: true})
+          })
+          el.addEventListener('gripup', function () {
+            el.setAttribute('collision-filter', {collisionForces: false})
+          })
+        }
+      })
+    </script>
+
+    <!--Playing fire SFX when button is clicked-->
+    <script>
+      AFRAME.registerComponent('activate-audio', 
+      {
+        init: function () 
+        {
+          var fire = document.querySelector("#button");
+          var confirm = false;
+          this.el.addEventListener('click', function() {
+          if(confirm == false) 
+          {
+            fire.components.sound.playSound();
+            confirm = true;
+          }
+          else 
+          {
+            fire.components.sound.pauseSound();
+            confirm = false;
+          }
+          });
+        }
+      });
+    </script>
+
+  </head>
+  
+  <body>
+    
+    <a-scene physics>
+
+      <a-assets>
+        
+        <!--Audio Assets (Credit: https://mixkit.co/free-sound-effects/forest/ and https://www.soundjay.com/fire-sound-effects.html)-->
+        <audio id="camping_music" src="assets/camping-ambience.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <audio id="fire_sfx" src="assets/campfire-sfx.mp3" preload="auto" crossorigin="anonymous"></audio>
+                  
+        <!--3D Model Assets purchased from https://sketchfab.com/3d-models/cartoon-camping-kit-6baeb91fa58549e29f839a7e72fc1af1-->
+        <a-asset-item id="stones_model" response-type="arraybuffer" src="assets/Campfire/scene.gltf"></a-asset-item>
+        <a-asset-item id="tent_model" response-type="arraybuffer" src="assets/Tent/scene.gltf"></a-asset-item>
+        <a-asset-item id="table_model" response-type="arraybuffer" src="assets/Table/scene.gltf"></a-asset-item>
+        <a-asset-item id="chair1_model" response-type="arraybuffer" src="assets/Chair_1/scene.gltf"></a-asset-item>
+        <a-asset-item id="chair2_model" response-type="arraybuffer" src="assets/Chair_2/scene.gltf"></a-asset-item>
+        <a-asset-item id="carpet_model" response-type="arraybuffer" src="assets/Carpet/scene.gltf"></a-asset-item>
+        <a-asset-item id="bag_model" response-type="arraybuffer" src="assets/Bag/scene.gltf"></a-asset-item>
+        <a-asset-item id="sleeping_bag_model" response-type="arraybuffer" src="assets/Sleeping_Bag/scene.gltf"></a-asset-item>
+        <a-asset-item id="camera_model" response-type="arraybuffer" src="assets/Camera/scene.gltf"></a-asset-item>
+        <a-asset-item id="mug_model" response-type="arraybuffer" src="assets/Mug/scene.gltf"></a-asset-item>
+        <a-asset-item id="sign_model" response-type="arraybuffer" src="assets/Sign/scene.gltf"></a-asset-item>
+        
+        <!--Preset attributes for objects with interaction-->
+        <a-mixin id="button" geometry="primitive: cylinder; radius: 0.1; height: 0.1"
+                 hoverable clickable
+                 event-set__hoveron="_event: hover-start; material.opacity: 0.7; transparent: true"
+                 event-set__hoveroff="_event: hover-end; material.opacity: 1; transparent: false"
+                 dynamic-body shadow>
+        </a-mixin>
+        <a-mixin id="touch"
+                 physics-collider phase-shift
+                 collision-filter="collisionForces: false"
+                 static-body="shape: sphere; sphereRadius: 0.02"
+                 super-hands="colliderEvent: collisions;
+                              colliderEventProperty: els;
+                              colliderEndEvent: collisions;
+                              colliderEndEventProperty: clearedEls;">
+        </a-mixin>
+        <a-mixin  id="log" geometry="primitive: cylinder; height: 0.7; radius: 0.1;" material="color: #462100"
+                  hoverable grabbable stretchable draggable droppable
+                  event-set__hoveron="_event: hover-start; material.opacity: 0.7; transparent: true"
+                  event-set__hoveroff="_event: hover-end; material.opacity: 1; transparent: false"
+                  dynamic-body shadow>
+        </a-mixin>
+
+      </a-assets>
+
+      <!--Sound setup-->
+      <a-entity sound="src: #camping_music; autoplay:true; loop:true;"></a-entity>
+      <a-entity sound="src: #fire_sfx"></a-entity>
+
+      <!--Camera and movement setup-->
+      <a-entity movement-controls>
+        <a-camera positon="0 1.6 0">
+          <a-entity light="type:spot; intensity:1.4; castShadow:true; shadowBias:-0.0005; angle:40; penumbra:0.3;" position="0.5 -0.5 0"></a-entity>
+          <a-entity cursor="rayOrigin:mouse;" raycaster="far:20; interval:200; objects:.interactive;"></a-entity>
+        </a-camera>
+        <a-entity id="rhand" mixin="touch" hand-controls="hand: right"></a-entity>
+        <a-entity id="lhand" mixin="touch" hand-controls="hand: left"></a-entity>
+      </a-entity>
+
+      <!--Button and logs-->
+      <a-entity class="button" mixin="button" position="0 0.265 -1.5" material="color: red" fire-effect sound="src: #fire_sfx" activate-audio></a-entity>
+      <a-entity id="woodlog1" mixin="log" position="-4 0.265 -0.5" rotation="90, 0, 0"></a-entity>
+      <a-entity id="woodlog2" mixin="log" position="-3 0.265 -0.5" rotation="90, 0, 0"></a-entity>
+      <a-entity id="woodlog3" mixin="log" position="-2 0.265 -0.5" rotation="90, 0, 0"></a-entity>
+
+      <!--Campfire setup-->
+      <a-entity id="chair" position="1.5 0 -5" rotation="0, 135, 0" scale="0.3 0.3 0.3" gltf-model="#chair2_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="chair" position="-1.5 0 -5" rotation="0, 225, 0" scale="0.3 0.3 0.3" gltf-model="#chair2_model" shadow="cast:true; receive:false;"></a-entity> 
+      <a-entity id="chair" position="0 0 -5.5" rotation="0, 180, 0" scale="0.3 0.3 0.3" gltf-model="#chair1_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity class="dirtground" position="0 0 -3.4" geometry="primitive:cylinder; radius:1.5; height:0.01;" material="color:#271e11; roughness:1.0; opacity:0.85;"></a-entity>
+      <a-entity id="stones" position="0 0.265 -3.4" scale="0.5 0.5 0.5" gltf-model="#stones_model" material="roughness:0; metalness:1.0;" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="campfire" position="0 -0.25 -3.4" scale="1.5 1 1"></a-entity>
+      <a-entity position="0.0 1.5 -3.5">
+        <a-entity id="ambient-light" light="type: point; color: #FFA200; intensity: 0; distance: 10.0; castShadow: true; shadowMapHeight: 1024; shadowMapWidth: 1024;"></a-entity>
+      </a-entity>
+
+      <!--Tent setup-->
+      <a-entity id="tent" position="0 1.5 3.5" scale="0.5 0.5 0.5" gltf-model="#tent_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="sleeping_bag" position="0 0 4" scale="0.3 0.3 0.3" gltf-model="#sleeping_bag_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="carpet" position="0 0.01 1.5" scale="1 0.6 0.6" gltf-model="#carpet_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="bag" position="-1 0 1.7" rotation="0, -180, 0" scale="0.2 0.2 0.2" gltf-model="#bag_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="table" position="2 0.3 0.75" rotation="0, 180, 0" scale="0.4 0.4 0.4" gltf-model="#table_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="camera" position="2.1 0.6 0.5" rotation="0, 110, 0" scale="0.2 0.2 0.2" gltf-model="#camera_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="mug" position="1.8 0.6 1" rotation="0, -90, 0" scale="0.2 0.2 0.2" gltf-model="#mug_model" shadow="cast:true; receive:false;"></a-entity>
+        
+      <!--Sign setup--> 
+      <a-entity id="sign" position="-3 0 -3" rotation="0, 45, 0" gltf-model="#sign_model" shadow="cast:true; receive:false;"></a-entity>
+      <a-entity id="sign_message" layout="type: box; margin: 10" geometry="primitive:plane; width:3; height:2" position="-2.9 1.1 -2.9" rotation="0 45 0" scale="0.3 0.3 0.3" material="color:#DA8767;"></a-entity>
+      <a-entity layout="type: box; margin: 1" scale="0.15 0.15" position="-2.9 1.1 -2.9" rotation="0 45 0">
+        <a-text id="message_1" value="Welcome to Camp" wrap-count="20" align="center" color="#000" position="0 1 0"></a-text>
+        <a-text id="message_2" value="Your job tonight is to place 3 logs in the pit, then click the button to start the fire." position="0 -0.1 0" wrap-count="25" align="center" color="#000"></a-text>
+        <a-text id="message_3" value="Have fun!" wrap-count="25" align="center" color="#000" position="0 -1.1 0"></a-text>
+      </a-entity>
+      
+      <!--Ground collider keeps objets from falling-->
+      <a-box static-body width="100" height="0.01" depth="100" visible="false"></a-box>
+      
+      <!--Environment setup-->
+      <a-entity id="env" environment= "preset:starry; 
+                                      groundTexture:squares; 
+                                      groundColor:#255428; 
+                                      groundColor2:#337033; 
+                                      gridColor:#; 
+                                      dressing:trees; 
+                                      dressingColor:#011704; 
+                                      dressingScale:2;">
+      </a-entity>
+    
+    </a-scene>
+    
+  </body>
+
+</html>
