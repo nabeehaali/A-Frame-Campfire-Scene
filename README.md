@@ -15,17 +15,26 @@ The controls required for each type of device can be found below:
 | `Mobile` | **Move**: Hold finger on screen<br/>**Grab**: Hold finger on log<br>**Drop**: Release finger from screen<br>**Instantiate/Destory**: Tap on button with finger<br>*Note*: The direction where you pick the log will be the same as your movement |
 | `Oculus` | **Move**: Physically move body in desired direction (alternative: use left hand joystick)<br/>**Grab**: Hover over log, hold A to grab<br>**Drop**: Release A<br>**Instantiate/Destory**: Hover over button, click with A |
 
-These were the components used to build this project:<br>
+### Instructions for use<br>
 
+1. Download this project.
+2. Open project folder in Visual Studio Code
+3. Open a new terminal
+4. Initialize via npm
 ```html
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://unpkg.com/aframe-environment-component@1.2.0/dist/aframe-environment-component.min.js"></script>
-  <script src="https://unpkg.com/aframe-randomizer-components@^3.0.1/dist/aframe-randomizer-components.min.js"></script>
-  <script src="//cdn.rawgit.com/donmccurdy/aframe-physics-system/v4.0.1/dist/aframe-physics-system.min.js"></script>
-  <script src="https://unpkg.com/aframe-physics-extras@0.1.2/dist/aframe-physics-extras.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
-  <script src="https://unpkg.com/aframe-event-set-component@4.2.1/dist/aframe-event-set-component.min.js"></script>
-  <script src="https://unpkg.com/super-hands@^3.0.1/dist/super-hands.min.js"></script>
+  npm init
+```
+5. Install via npm
+```html
+  npm install
+```
+6. Connect to app.js
+```html
+  node .\app.js
+```
+7. Type URL in browser
+```html
+  localhost:8080
 ```
 
 ## Challenges
