@@ -15,7 +15,7 @@ The controls required for each type of device can be found below:
 | `Mobile` | **Move**: Hold finger on screen<br/>**Grab**: Hold finger on log<br>**Drop**: Release finger from screen<br>**Instantiate/Destory**: Tap on button with finger<br>*Note*: The direction where you pick the log will be the same as your movement |
 | `Oculus` | **Move**: Physically move body in desired direction (alternative: use left hand joystick)<br/>**Grab**: Hover over log, hold A to grab<br>**Drop**: Release A<br>**Instantiate/Destory**: Hover over button, click with A |
 
-### Instructions for use<br>
+### Instructions for use:
 
 1. Download this project.
 2. Open project folder in Visual Studio Code
