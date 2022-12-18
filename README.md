@@ -1,5 +1,5 @@
-# A-Frame Campfire Scene
-This is a virtual reality experience of being at a nighttime campfire using A-Frame! I've always liked the idea of camping, but never go because of all the bugs. Now, you can enjoy the perfect summer night in virtual reality	:smile:
+# :camping: A-Frame Campfire Scene
+This is a virtual reality experience of being at a nighttime campfire using A-Frame! I've always liked the idea of camping, but never go because of all the bugs. Now, you can enjoy the perfect summer night in virtual reality
 
 ## Overview
 I wanted to create something that was immersive using simple controls and functions. This is a very important concept to grasp when designing for virtual reality. From the sound to the visual elements, many details need to be considered to create a believable virtual world. A campfire was a good way of creating an experience that familiar to reality, while resembling a fun hangout with others.
